@@ -10,11 +10,19 @@ public class FusionSlamService extends MicroService{
     public void initialize()
     {
         // TODO : subscribe to tick, terminated, crashed broadcasts and Tracked, pose events
-        subscribeBroadcast(TickBroadcast.class,);
-        subscribeBroadcast(TerminatedBroadcast.class,);
-        subscribeBroadcast(CrashedBroadcast.class,);
+        subscribeBroadcast(TickBroadcast.class,new TickCallback(this));
+        subscribeBroadcast(TerminatedBroadcast.class,new TerminatedCallback());
+        subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
 
-        subscribeEvent(TrackedObjectEvent.class,);
-        subscribeEvent(PoseEvent.class, );
+        subscribeEvent(TrackedObjectEvent.class,new TrackedObjectCallback(this));
+        subscribeEvent(PoseEvent.class, new PoseCallback(this));
     }
+
+    public void processTrackedObjects()
+    {
+        // TODO : implement
+    }
+
+
+
 }

@@ -10,8 +10,8 @@ public class CameraService extends MicroService{
     public void initialize()
     {
     // TODO : subscribe to tick, terminate and crash broadcasts
-        subscribeBroadcast(TickBroadcast.class,);
-        subscribeBroadcast(TerminatedBroadcast.class,);
+        subscribeBroadcast(TickBroadcast.class,new TickCallback(this));
+        subscribeBroadcast(TerminatedBroadcast.class,new TerminatedCallback());
         subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
     }
 }

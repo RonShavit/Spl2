@@ -10,10 +10,10 @@ public class LiDarWorkerService extends MicroService{
     {
         // TODO : subscribe to tick, terminated, crash broadcast and detect event
 
-        subscribeBroadcast(TickBroadcast.class,);
-        subscribeBroadcast(TerminatedBroadcast.class,);
-        subscribeBroadcast(CrashedBroadcast.class,);
+        subscribeBroadcast(TickBroadcast.class,new TickCallback(this));
+        subscribeBroadcast(TerminatedBroadcast.class,new TerminatedCallback());
+        subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
 
-        subscribeEvent(DetectObjectEvent.class, );
+        subscribeEvent(DetectObjectEvent.class,new DetectedObjectCallback() );
     }
 }

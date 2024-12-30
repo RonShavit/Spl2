@@ -23,4 +23,9 @@ public class TrackedObject {
         this.coordinates = coordinates;
     }
 
+    public ConcurrentLinkedQueue<CloudPoint> getCoordinates()
+    {
+        return coordinates;
+    }
+
 }

@@ -9,7 +9,7 @@ public class PoseService extends MicroService{
     public void initialize()
     {
         // TODO : subscribe to Tick, Crashed broadcasts
-        subscribeBroadcast(TickBroadcast.class,);
-        subscribeBroadcast(CrashedBroadcast.class,);
+        subscribeBroadcast(TickBroadcast.class,new TickCallback(this));
+        subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
     }
 }

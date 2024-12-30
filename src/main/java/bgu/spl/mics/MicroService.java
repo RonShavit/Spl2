@@ -2,6 +2,7 @@ package bgu.spl.mics;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -26,9 +27,9 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private ConcurrentLinkedQueue<Message> messagesQueue;
-    private ConcurrentHashMap<Class<? extends Event<?>>,Callback<?>> eventCallbacksMap;
-    private ConcurrentHashMap<Class<? extends  Broadcast>,Callback<?>> broadcastCallbackMap;
+    private ConcurrentHashMap<Class<? extends Message>,Callback<?>> callbackMap;
     private MessageBus bus;
+    private AtomicInteger tick;
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -37,9 +38,9 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
         this.bus = MessageBusImpl.getInstance();
-        this.broadcastCallbackMap = new ConcurrentHashMap<>();
-        this.eventCallbacksMap = new ConcurrentHashMap<>();
+        this.callbackMap = new ConcurrentHashMap<>();
         this.messagesQueue= null;
+        tick = new AtomicInteger(0);
     }
 
     /**
@@ -66,7 +67,7 @@ public abstract class MicroService implements Runnable {
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
 
         bus.subscribeEvent(type,this);
-        eventCallbacksMap.put(type,callback);
+        this.callbackMap.put(type,callback);
     }
 
     /**
@@ -91,7 +92,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
         bus.subscribeBroadcast(type,this);
-        broadcastCallbackMap.put(type,callback);
+        callbackMap.put(type,callback);
     }
 
     /**
@@ -164,9 +165,28 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         initialize();
         while (!terminated) {
-            terminate();
+            if (!messagesQueue.isEmpty())
+            {
+                Message msg = messagesQueue.remove();
+                if (msg.getClass()==TrackedObjectEvent.class)
+                {
+                    TrackedObjectMessage(msg);
+                }
+                else if (msg.getClass() == DetectObjectEvent.class)
+                {
+                    DetectedObjectMessage(msg);
+                }
+                else
+                {
+                }
+
+            }
         }
     }
+
+    public abstract void TrackedObjectMessage(Message msg);
+
+    public abstract void DetectedObjectMessage(Message msg);
 
     /**
      *
@@ -192,6 +212,11 @@ public abstract class MicroService implements Runnable {
     public void removeQueue()
     {
         this.messagesQueue = null;
+    }
+
+    public void updateTick()
+    {
+        tick.compareAndSet(tick.intValue(),tick.intValue()+1);
     }
 
 }
