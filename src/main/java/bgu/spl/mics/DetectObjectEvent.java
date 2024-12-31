@@ -2,6 +2,11 @@ package bgu.spl.mics;
 
 public class DetectObjectEvent implements Event<Boolean>{
     private Future<Boolean> future;
+
+    public StampedDetectedObject getStampedDetectedObjects() {
+        return stampedDetectedObjects;
+    }
+
     private StampedDetectedObject stampedDetectedObjects;
 
 

@@ -10,6 +10,11 @@ public class TrackedObjectCallback implements Callback<TrackedObjectEvent>{
 
     @Override
     public void call(TrackedObjectEvent c) {
+        call();
+    }
+
+    public void call()
+    {
         fusionSlamService.processTrackedObjects();
     }
 }

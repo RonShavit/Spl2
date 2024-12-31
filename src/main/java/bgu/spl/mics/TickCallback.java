@@ -10,6 +10,7 @@ public class TickCallback implements Callback<TickBroadcast>{
 
     @Override
     public void call(TickBroadcast c) {
-        m.updateTick();
+        call();
     }
+    public void call(){m.updateTick();}
 }

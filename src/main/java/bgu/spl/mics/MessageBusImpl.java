@@ -65,7 +65,7 @@ public class MessageBusImpl implements MessageBus {
 			List<MicroService> list = subscribedBroadcast.get(b.getClass());
 			for(MicroService m:list)
 			{
-				// TODO : implement MicroService:reciveBrodacst()
+				m.receiveMessage(b);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -83,6 +83,7 @@ public class MessageBusImpl implements MessageBus {
 			list.remove(first);
 			Future<T> f = e.getFuture();
 			list.addLast(first);
+			first.receiveMessage(e);
 			return  f;
 		}
 		catch (Exception ex)
@@ -93,7 +94,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void register(MicroService m) {
 		// TODO Auto-generated method stub
-		m.createMessageQueue(); // TODO : implement
+		m.createMessageQueue();
 
 	}
 
@@ -102,7 +103,7 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		if (m.isQueueExist())
 			m.removeQueue();
-		// TODO :
+
 	}
 
 

@@ -4,6 +4,11 @@ public class Pose {
     private float x;
     private float y;
     private float yaw;
+
+    public int getTIME() {
+        return TIME;
+    }
+
     private final int TIME;
 
     public Pose(float x, float y, float yaw, int time)

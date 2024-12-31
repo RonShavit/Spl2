@@ -5,4 +5,6 @@ public class TerminatedCallback implements Callback<TerminatedBroadcast>{
     public void call(TerminatedBroadcast c) {
 
     }
+
+    public void call(){};
 }

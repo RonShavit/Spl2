@@ -7,8 +7,13 @@ public class CrashedCallback implements Callback<CrashedBroadcast>{
         this.m =m;
     };
 
-    public void call (CrashedBroadcast c)
+    public void call ()
     {
         m.terminate();
+    }
+
+    public void call (CrashedBroadcast c)
+    {
+        call();
     }
 }

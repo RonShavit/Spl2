@@ -2,6 +2,7 @@ package bgu.spl.mics;
 
 public class TimeService extends MicroService {
     int clockCounter;
+
     final int speed;
     final int duration;
 
@@ -15,5 +16,19 @@ public class TimeService extends MicroService {
 
     public void initialize()
     {
+        while (clockCounter*speed<duration)
+        {
+            try
+            {
+                Thread.sleep(speed);
+                clockCounter++;
+                TickBroadcast tickBroadcast = new TickBroadcast();
+                sendBroadcast(tickBroadcast);
+            }
+            catch (Exception E)
+            {}
+        }
+        CrashedBroadcast crashedBroadcast = new CrashedBroadcast();
+        sendBroadcast(crashedBroadcast);
     }
 }

@@ -20,4 +20,9 @@ public class LidarTrackerWorker {
         Down,
         Error;
     }
+
+    public ConcurrentLinkedQueue<TrackedObject> analiseStampedDetectedObjects(StampedDetectedObject stampedDetectedObject)
+    {
+        return null; // TODO : Get data from database
+    }
 }

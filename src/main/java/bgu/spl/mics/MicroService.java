@@ -27,9 +27,24 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private ConcurrentLinkedQueue<Message> messagesQueue;
-    private ConcurrentHashMap<Class<? extends Message>,Callback<?>> callbackMap;
+    private ConcurrentHashMap<Class<? extends Message>,Callback<? extends Message>> callbackMap;
     private MessageBus bus;
+
+    public AtomicInteger getTick() {
+        return tick;
+    }
+
     private AtomicInteger tick;
+
+    protected enum MessageTypeEnum
+    {
+        DETECTOBJECT,
+        TRACKEDOBJECT,
+        POSE,
+        TICK,
+        TERMINATE,
+        CRASHED
+    }
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -41,6 +56,7 @@ public abstract class MicroService implements Runnable {
         this.callbackMap = new ConcurrentHashMap<>();
         this.messagesQueue= null;
         tick = new AtomicInteger(0);
+
     }
 
     /**
@@ -168,25 +184,22 @@ public abstract class MicroService implements Runnable {
             if (!messagesQueue.isEmpty())
             {
                 Message msg = messagesQueue.remove();
-                if (msg.getClass()==TrackedObjectEvent.class)
-                {
+                if (msg.getClass()== TrackedObjectEvent.class)
                     TrackedObjectMessage(msg);
-                }
-                else if (msg.getClass() == DetectObjectEvent.class)
-                {
+                else if (msg.getClass()== DetectObjectEvent.class)
                     DetectedObjectMessage(msg);
-                }
                 else
                 {
+                    callbackMap.get(msg.getClass()).call();
                 }
 
             }
         }
     }
 
-    public abstract void TrackedObjectMessage(Message msg);
+    public void TrackedObjectMessage(Message msg){};
 
-    public abstract void DetectedObjectMessage(Message msg);
+    public void DetectedObjectMessage(Message msg){};
 
     /**
      *
@@ -214,9 +227,17 @@ public abstract class MicroService implements Runnable {
         this.messagesQueue = null;
     }
 
+    /**
+     * @POST: this.tick = @PRE: this.tick + 1
+     */
     public void updateTick()
     {
         tick.compareAndSet(tick.intValue(),tick.intValue()+1);
+    }
+
+    public void receiveMessage(Message msg)
+    {
+        messagesQueue.add(msg);
     }
 
 }
