@@ -3,9 +3,10 @@ import  java.util.concurrent.ConcurrentLinkedQueue;
 public class LidarDataBase {
     ConcurrentLinkedQueue<StampedCloudPoints> stampedCloudPointsQueue;
     static private LidarDataBase dataBaseSingleton = null;
+    static private Object lock = new Integer(0);
     private LidarDataBase()
     {
-        // TODO : Implement json
+        stampedCloudPointsQueue = new ConcurrentLinkedQueue<>();
     }
 
     /**
@@ -15,12 +16,17 @@ public class LidarDataBase {
     {
         if (dataBaseSingleton==null)
         {
-            synchronized (dataBaseSingleton) {
+            synchronized (lock) {
                 if (dataBaseSingleton == null)
                     dataBaseSingleton = new LidarDataBase();
             }
         }
         return  dataBaseSingleton;
+    }
+
+    public void addStampedCloudPoints(StampedCloudPoints stampedCloudPoints)
+    {
+        stampedCloudPointsQueue.add(stampedCloudPoints);
     }
 
 

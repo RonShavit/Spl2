@@ -16,4 +16,8 @@ public class StampedDetectedObject {
     {
         return Time;
     }
+
+    public ConcurrentLinkedQueue<DetectedObject> getDetectedObjects() {
+        return detectedObjects;
+    }
 }

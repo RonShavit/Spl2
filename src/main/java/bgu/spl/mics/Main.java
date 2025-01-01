@@ -23,8 +23,10 @@ public class Main {
             int speed = jsonObject.get("TickTime").getAsInt();
             int duration = jsonObject.get("Duration").getAsInt();
 
+            //for cameras
             JsonObject cameraData = jsonObject.getAsJsonObject("Cameras");
             String cameraDataPath = cameraData.get("camera_datas_path").getAsString();
+
             List<Camera> cameraList = new ArrayList<>();
             JsonArray camerasConfig = cameraData.getAsJsonArray("CamerasConfigurations");
             for (JsonElement jsonElement: camerasConfig)
@@ -32,6 +34,17 @@ public class Main {
                 cameraList.add(new Camera(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),cameraDataPath));
             }
             List<JsonObject> camerasAsJson = new ArrayList<>();
+
+            //for lidars
+            JsonObject lidarData = jsonObject.getAsJsonObject("LiDarWorkers");
+            String lidarDataPath = lidarData.get("lidars_data_path").getAsString();
+            List<LidarTrackerWorker> lidarList = new ArrayList<>();
+            JsonArray lidarsConfig = cameraData.getAsJsonArray("LidarConfigurations");
+            for (JsonElement jsonElement: lidarsConfig)
+            {
+                lidarList.add(new LidarTrackerWorker(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),lidarDataPath));
+            }
+            List<JsonObject> lidarsAsJson = new ArrayList<>();
 
 
             //create MicroServices Threads
