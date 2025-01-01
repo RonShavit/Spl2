@@ -2,6 +2,11 @@ package bgu.spl.mics;
 
 public class PoseEvent implements Event<Boolean> {
     Future<Boolean> future;
+
+    public Pose getPose() {
+        return pose;
+    }
+
     Pose pose;
 
     public PoseEvent(Pose pose)

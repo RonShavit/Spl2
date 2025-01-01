@@ -1,6 +1,18 @@
 package bgu.spl.mics;
 
 public class Pose {
+    public float getYaw() {
+        return yaw;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
     private float x;
     private float y;
     private float yaw;

@@ -1,24 +1,70 @@
 package bgu.spl.mics;
 
 
-import java.util.concurrent.TimeUnit;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import javax.swing.plaf.IconUIResource;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args)
     {
-        Future<Integer> f = new Future<>();
-        Thread t= new Thread(()->longInsert(f));
-        t.start();
-        System.out.println(f.get(1600, TimeUnit.MILLISECONDS));
-    }
+        //String path = args[0];
+        String path = "C:\\Users\\ronsh\\IdeaProjects\\spl2\\example input\\configuration_file.json";
+        try (FileReader f = new FileReader(path)) {
+            // get data from json
+            JsonObject jsonObject = JsonParser.parseReader(f).getAsJsonObject();
+            int speed = jsonObject.get("TickTime").getAsInt();
+            int duration = jsonObject.get("Duration").getAsInt();
 
-    public static void longInsert(Future<Integer> f)
-    {
-        try
-        {Thread.sleep(1500);} catch (Exception e) {
+            JsonObject cameraData = jsonObject.getAsJsonObject("Cameras");
+            String cameraDataPath = cameraData.get("camera_datas_path").getAsString();
+            List<Camera> cameraList = new ArrayList<>();
+            JsonArray camerasConfig = cameraData.getAsJsonArray("CamerasConfigurations");
+            for (JsonElement jsonElement: camerasConfig)
+            {
+                cameraList.add(new Camera(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),cameraDataPath));
+            }
+            List<JsonObject> camerasAsJson = new ArrayList<>();
+
+
+            //create MicroServices Threads
+            TimeService timeService = new TimeService("TimeService",speed,duration);
+            Thread tickService = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    timeService.initialize();
+                }
+            });
+
+            for (Camera camera:cameraList)
+            {
+                CameraService cameraService = new CameraService("camera"+camera.getId(),camera);
+                Thread camServiceThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cameraService.initialize();
+                    }
+                });
+                camServiceThread.start();
+            }
+
+
+
+
+            //run threads
+            tickService.start();
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        f.resolve(0);
+
     }
+
 }

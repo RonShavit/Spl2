@@ -10,6 +10,6 @@ public class DetectedObjectCallback implements Callback<DetectObjectEvent>{
 
     public void call()
     {
-        // TODO : implement
+
     }
 }

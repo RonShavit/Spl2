@@ -15,6 +15,6 @@ public class TrackedObjectCallback implements Callback<TrackedObjectEvent>{
 
     public void call()
     {
-        fusionSlamService.processTrackedObjects();
+        //
     }
 }

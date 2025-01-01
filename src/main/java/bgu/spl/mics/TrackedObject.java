@@ -2,7 +2,20 @@ package bgu.spl.mics;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TrackedObject {
+    public String getDescription() {
+        return description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     String id;
+
+    public int getTime() {
+        return time;
+    }
+
     int time;
     String description;
     ConcurrentLinkedQueue<CloudPoint> coordinates;

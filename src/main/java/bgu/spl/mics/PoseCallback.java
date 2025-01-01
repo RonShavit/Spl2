@@ -10,7 +10,7 @@ public class PoseCallback implements Callback<PoseEvent>{
 
     @Override
     public void call() {
-     // TODO : implement
+
     }
 
     public void call(PoseEvent c)

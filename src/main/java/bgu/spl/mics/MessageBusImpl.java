@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -15,6 +16,27 @@ public class MessageBusImpl implements MessageBus {
 	private static MessageBus singelton = null;
 	private Map<Class<? extends Event<?>>, List<MicroService>> subscribedEvent;
 	private Map<Class<? extends Broadcast>, List<MicroService>> subscribedBroadcast;
+	private static Object lock = new Integer(0);
+	private ConcurrentLinkedQueue<Event> waitingEvents;
+	private ConcurrentLinkedQueue<Broadcast> waitingBroadcasts;
+
+	private <T> void tryAwaitingEvents()
+	{
+		for (Event<T> event: waitingEvents)
+		{
+			waitingEvents.remove(event);
+			sendEvent(event);
+		}
+	}
+
+	private void tryAwaitingBroadcasts()
+	{
+		for (Broadcast b:waitingBroadcasts)
+		{
+			waitingBroadcasts.remove(b);
+			sendBroadcast(b);
+		}
+	}
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
@@ -31,6 +53,7 @@ public class MessageBusImpl implements MessageBus {
 			list.add(m);
 			subscribedEvent.put(type,list);
 		}
+		tryAwaitingEvents();
 	}
 
 	@Override
@@ -48,6 +71,7 @@ public class MessageBusImpl implements MessageBus {
 			list.add(m);
 			subscribedBroadcast.put(type,list);
 		}
+		tryAwaitingBroadcasts();
 
 	}
 
@@ -63,9 +87,14 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		try {
 			List<MicroService> list = subscribedBroadcast.get(b.getClass());
+			if (list!=null && !list.isEmpty()){
 			for(MicroService m:list)
 			{
 				m.receiveMessage(b);
+			}}
+			else
+			{
+				waitingBroadcasts.add(b);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -79,11 +108,18 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		try {
 			List<MicroService> list = subscribedEvent.get(e.getClass());
-			MicroService first = list.getFirst();
-			list.remove(first);
+			if (list!=null && !list.isEmpty()) {
+				MicroService first = list.get(0);
+				list.remove(first);
+
+				list.add(first);
+				first.receiveMessage(e);
+			}
+			else
+			{
+				waitingEvents.add(e);
+			}
 			Future<T> f = e.getFuture();
-			list.addLast(first);
-			first.receiveMessage(e);
 			return  f;
 		}
 		catch (Exception ex)
@@ -120,7 +156,7 @@ public class MessageBusImpl implements MessageBus {
 	{
 		if (singelton==null)
 		{
-			synchronized (singelton) {
+			synchronized (lock) {
 				if (singelton == null)
 					singelton = new MessageBusImpl();
 			}
@@ -135,6 +171,8 @@ public class MessageBusImpl implements MessageBus {
 	{
 		subscribedEvent = new ConcurrentHashMap<>();
 		subscribedBroadcast = new ConcurrentHashMap<>();
+		waitingBroadcasts = new ConcurrentLinkedQueue<>();
+		waitingEvents = new ConcurrentLinkedQueue<>();
 	}
 
 	

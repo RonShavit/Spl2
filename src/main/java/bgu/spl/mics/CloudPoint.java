@@ -1,6 +1,14 @@
 package bgu.spl.mics;
 
 public class CloudPoint {
+    public double getY() {
+        return y;
+    }
+
+    public double getX() {
+        return x;
+    }
+
     double x;
     double y;
 

@@ -54,7 +54,7 @@ public abstract class MicroService implements Runnable {
         this.name = name;
         this.bus = MessageBusImpl.getInstance();
         this.callbackMap = new ConcurrentHashMap<>();
-        this.messagesQueue= null;
+        this.messagesQueue= new ConcurrentLinkedQueue<>();
         tick = new AtomicInteger(0);
 
     }
@@ -188,6 +188,8 @@ public abstract class MicroService implements Runnable {
                     TrackedObjectMessage(msg);
                 else if (msg.getClass()== DetectObjectEvent.class)
                     DetectedObjectMessage(msg);
+                else if (msg.getClass()==PoseEvent.class)
+                    PoseMessage(msg);
                 else
                 {
                     callbackMap.get(msg.getClass()).call();
@@ -200,6 +202,8 @@ public abstract class MicroService implements Runnable {
     public void TrackedObjectMessage(Message msg){};
 
     public void DetectedObjectMessage(Message msg){};
+
+    public void PoseMessage(Message msg){};
 
     /**
      *
