@@ -39,7 +39,7 @@ public class Main {
             JsonObject lidarData = jsonObject.getAsJsonObject("LiDarWorkers");
             String lidarDataPath = lidarData.get("lidars_data_path").getAsString();
             List<LidarTrackerWorker> lidarList = new ArrayList<>();
-            JsonArray lidarsConfig = cameraData.getAsJsonArray("LidarConfigurations");
+            JsonArray lidarsConfig = lidarData.getAsJsonArray("LidarConfigurations");
             for (JsonElement jsonElement: lidarsConfig)
             {
                 lidarList.add(new LidarTrackerWorker(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),lidarDataPath));
