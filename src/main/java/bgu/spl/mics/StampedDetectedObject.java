@@ -1,6 +1,9 @@
 package bgu.spl.mics;
 import  java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * a list of {@link DetectedObject}s detected at time {@code Time}
+ */
 public class StampedDetectedObject {
     final private int Time;
     ConcurrentLinkedQueue<DetectedObject> detectedObjects;

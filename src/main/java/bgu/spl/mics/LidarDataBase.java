@@ -1,5 +1,10 @@
 package bgu.spl.mics;
 import  java.util.concurrent.ConcurrentLinkedQueue;
+
+/**
+ * A singleton representing a database of StampedCloudPoints
+ */
+
 public class LidarDataBase {
     ConcurrentLinkedQueue<StampedCloudPoints> stampedCloudPointsQueue;
     static private LidarDataBase dataBaseSingleton = null;

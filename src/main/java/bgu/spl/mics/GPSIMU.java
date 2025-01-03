@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Represents a GPSIMU unit
+ */
 public class GPSIMU {
     AtomicInteger currentTick;
     Status status;
@@ -26,6 +29,10 @@ public class GPSIMU {
         currentTick.compareAndSet(currentTick.intValue(),currentTick.intValue()+1);
     }
 
+    /**
+     *
+     * @return the {@link Pose} of the robot at time {@code this.tick}
+     */
     public Pose getPoseInTick()
     {
         if (posesList != null) {
@@ -45,6 +52,11 @@ public class GPSIMU {
         Error;
     }
 
+    /**
+     *
+     * @param path the path to the pose_data json file
+     * @return a {@link ConcurrentLinkedQueue<Pose>} of all the poses of the robot according to the pose_data file
+     */
     private ConcurrentLinkedQueue<Pose> getPosesListFromJson(String path)
     {
         ConcurrentLinkedQueue<Pose> poses = new ConcurrentLinkedQueue<>();

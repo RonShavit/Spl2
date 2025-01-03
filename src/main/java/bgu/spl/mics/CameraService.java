@@ -3,6 +3,9 @@ package bgu.spl.mics;
 import java.awt.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Handles communication between a camera and the message bus (thus with the rest of the system)
+ */
 public class CameraService extends MicroService{
     Camera cam;
     public CameraService(String name, Camera cam)
@@ -19,7 +22,9 @@ public class CameraService extends MicroService{
         subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
     }
 
-
+    /**
+     * Sends all detected objects detected at time {@code this.tick}
+     */
     public void updateTick()
     {
         super.updateTick();

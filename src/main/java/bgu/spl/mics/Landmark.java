@@ -2,6 +2,9 @@ package bgu.spl.mics;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * represents a landmark on the map
+ */
 public class Landmark {
     final private String id;
     private String description;
@@ -21,9 +24,13 @@ public class Landmark {
     public void addCloudPoint(CloudPoint point)
     {
         coordinates.add(point);
+        averagePosition();
     }
 
-    public void avaragePoseition()
+    /**
+     * Averages the position of all the points in the Landmark
+     */
+    public void averagePosition()
     {
         int counter = 0;
         double sumX = 0;

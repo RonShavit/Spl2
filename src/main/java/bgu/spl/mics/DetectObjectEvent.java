@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+/**
+ * sent whenever an object has been detected
+ */
 public class DetectObjectEvent implements Event<Boolean>{
     private Future<Boolean> future;
 

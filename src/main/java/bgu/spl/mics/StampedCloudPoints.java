@@ -1,6 +1,10 @@
 package bgu.spl.mics;
 import java.awt.geom.CubicCurve2D;
 import  java.util.concurrent.ConcurrentLinkedQueue;
+
+/**
+ * a list of coordinates for object {@code id} at time {@code Time}
+ */
 public class StampedCloudPoints {
     private String id;
     private final int Time;

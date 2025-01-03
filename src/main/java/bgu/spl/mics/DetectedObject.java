@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+/**
+ * a single objet that has been detected by a camera
+ */
 public class DetectedObject {
     private String id;
     private String description;

@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+/**
+ * represents a Single point in space
+ */
 public class CloudPoint {
     public double getY() {
         return y;

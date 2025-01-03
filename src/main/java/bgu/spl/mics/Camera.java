@@ -10,6 +10,10 @@ import java.util.List;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Represents a Camera
+ *
+ */
 public class Camera {
     final private int id;
     final private int frequency;
@@ -24,9 +28,14 @@ public class Camera {
         Error;
     }
 
+    /**
+     *
+     * @return the id of the camera
+     */
     public int getId() {
         return id;
     }
+
 
     public Camera(int id, int frequency, String path)
     {
@@ -36,6 +45,11 @@ public class Camera {
         stampedDetectedObjectsQueue = new ConcurrentLinkedQueue<>();
     }
 
+    /**
+     *
+     * @param tick the tick that we want the objects detected at
+     * @return all objects found at {@code tick} tick
+     */
     public StampedDetectedObject getCameraData(int tick)
     {
         StampedDetectedObject stampedDetectedObject = null;

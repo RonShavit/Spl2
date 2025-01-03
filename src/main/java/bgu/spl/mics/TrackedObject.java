@@ -1,6 +1,9 @@
 package bgu.spl.mics;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * an object tracked at time {@code time}
+ */
 public class TrackedObject {
     public String getDescription() {
         return description;

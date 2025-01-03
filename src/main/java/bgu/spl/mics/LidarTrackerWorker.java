@@ -9,6 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * represents a LiDAR tracker Worker unit
+ */
 public class LidarTrackerWorker {
     final private int id;
     final private int frequency;
@@ -37,6 +40,11 @@ public class LidarTrackerWorker {
         return id;
     }
 
+    /**
+     *  tracks all {@link DetectedObject}s at time {@code stampedDetectedObject.time} and adds them to the {@link LidarDataBase}
+     * @param stampedDetectedObject A {@link StampedDetectedObject}
+     * @return A {@link ConcurrentLinkedQueue} of the tracked objects
+     */
     public ConcurrentLinkedQueue<TrackedObject> analiseStampedDetectedObjects(StampedDetectedObject stampedDetectedObject)
     {
 

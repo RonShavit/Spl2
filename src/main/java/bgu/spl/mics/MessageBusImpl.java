@@ -60,7 +60,6 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		// TODO Auto-generated method stub
-		System.out.println(m.getName() + " is subbing to "+type);
 		if(subscribedBroadcast.containsKey(type))
 		{
 			List<MicroService> list = subscribedBroadcast.get(type);
@@ -75,7 +74,6 @@ public class MessageBusImpl implements MessageBus {
 		}
 		if (isStooped)
 		{
-			System.out.println(m.getName()+ "has come in late");
 			m.terminate();
 		}
 		tryAwaitingBroadcasts();

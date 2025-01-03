@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+/**
+ * A position of the robot at time {@code TIME}
+ */
 public class Pose {
     public float getYaw() {
         return yaw;
