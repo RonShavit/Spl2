@@ -163,6 +163,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final void terminate() {
         this.terminated = true;
+        System.out.println(name+ " terminated");
     }
 
     /**
@@ -183,7 +184,14 @@ public abstract class MicroService implements Runnable {
         while (!terminated) {
             if (!messagesQueue.isEmpty())
             {
+
                 Message msg = messagesQueue.remove();
+                if(msg.getClass()==CrashedBroadcast.class)
+                {
+                    System.out.println(callbackMap.get(msg.getClass()));;
+                }
+
+
                 if (msg.getClass()== TrackedObjectEvent.class)
                     TrackedObjectMessage(msg);
                 else if (msg.getClass()== DetectObjectEvent.class)

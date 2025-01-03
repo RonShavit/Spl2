@@ -30,5 +30,7 @@ public class TimeService extends MicroService {
         }
         CrashedBroadcast crashedBroadcast = new CrashedBroadcast();
         sendBroadcast(crashedBroadcast);
+        System.out.println("stopped at "+ clockCounter);
+        terminate();
     }
 }

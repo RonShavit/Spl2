@@ -2,10 +2,10 @@ package bgu.spl.mics;
 
 public class PoseService extends MicroService{
     private GPSIMU gpsimu;
-    public PoseService(String name)
+    public PoseService(String name, String path)
     {
         super(name);
-        gpsimu = new GPSIMU();
+        gpsimu = new GPSIMU(path);
     }
 
     public void initialize()

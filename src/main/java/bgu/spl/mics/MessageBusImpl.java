@@ -19,6 +19,7 @@ public class MessageBusImpl implements MessageBus {
 	private static Object lock = new Integer(0);
 	private ConcurrentLinkedQueue<Event> waitingEvents;
 	private ConcurrentLinkedQueue<Broadcast> waitingBroadcasts;
+	private boolean isStooped = false;
 
 	private <T> void tryAwaitingEvents()
 	{
@@ -59,6 +60,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		// TODO Auto-generated method stub
+		System.out.println(m.getName() + " is subbing to "+type);
 		if(subscribedBroadcast.containsKey(type))
 		{
 			List<MicroService> list = subscribedBroadcast.get(type);
@@ -70,6 +72,11 @@ public class MessageBusImpl implements MessageBus {
 			List<MicroService> list = new LinkedList<>();
 			list.add(m);
 			subscribedBroadcast.put(type,list);
+		}
+		if (isStooped)
+		{
+			System.out.println(m.getName()+ "has come in late");
+			m.terminate();
 		}
 		tryAwaitingBroadcasts();
 
@@ -87,6 +94,10 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		try {
 			List<MicroService> list = subscribedBroadcast.get(b.getClass());
+			if (b.getClass()==CrashedBroadcast.class)
+			{
+				this.isStooped =true;
+			}
 			if (list!=null && !list.isEmpty()){
 			for(MicroService m:list)
 			{

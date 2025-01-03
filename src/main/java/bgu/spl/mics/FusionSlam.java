@@ -4,18 +4,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FusionSlam {
     private static FusionSlam fusionSlamInstance = null;
+    private static Object lock = new Integer(0);
     ConcurrentLinkedQueue<Landmark> landmarks;
     ConcurrentLinkedQueue<Pose> poses;
     private FusionSlam()
     {
-
+        poses = new ConcurrentLinkedQueue<>();
+        landmarks = new ConcurrentLinkedQueue<>();
     }
 
     public static FusionSlam getInstance()
     {
         if (fusionSlamInstance==null)
         {
-            synchronized (fusionSlamInstance)
+            synchronized (lock)
             {
                 if (fusionSlamInstance == null)
                     fusionSlamInstance = new FusionSlam();
@@ -78,6 +80,7 @@ public class FusionSlam {
 
     public void addPose(Pose pose)
     {
-        poses.add(pose);
+        if (pose!=null)
+            poses.add(pose);
     }
 }
