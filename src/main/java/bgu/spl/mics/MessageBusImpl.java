@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -14,12 +15,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class MessageBusImpl implements MessageBus {
 	private static MessageBus singelton = null;
-	private Map<Class<? extends Event<?>>, List<MicroService>> subscribedEvent;
-	private Map<Class<? extends Broadcast>, List<MicroService>> subscribedBroadcast;
+	private Map<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> subscribedEvent;
+	private Map<Class<? extends Broadcast>, ConcurrentLinkedQueue<MicroService>> subscribedBroadcast;
 	private static Object lock = new Integer(0);
 	private ConcurrentLinkedQueue<Event> waitingEvents;
 	private ConcurrentLinkedQueue<Broadcast> waitingBroadcasts;
-	private boolean isStooped = false;
+	private AtomicBoolean isStooped = new AtomicBoolean(false);
 
 	private <T> void tryAwaitingEvents()
 	{
@@ -44,13 +45,13 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		if(subscribedEvent.containsKey(type))
 		{
-			List<MicroService> list = subscribedEvent.get(type);
+			ConcurrentLinkedQueue<MicroService> list = subscribedEvent.get(type);
 			list.add(m);
 			subscribedEvent.put(type,list);
 		}
 		else
 		{
-			List<MicroService> list = new LinkedList<>();
+			ConcurrentLinkedQueue<MicroService> list = new ConcurrentLinkedQueue<>();
 			list.add(m);
 			subscribedEvent.put(type,list);
 		}
@@ -60,23 +61,25 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		// TODO Auto-generated method stub
-		if(subscribedBroadcast.containsKey(type))
-		{
-			List<MicroService> list = subscribedBroadcast.get(type);
-			list.add(m);
-			subscribedBroadcast.put(type,list);
+		synchronized (isStooped) {
+			if (subscribedBroadcast.containsKey(type)) {
+				subscribedBroadcast.get(type).add(m);
+				;
+
+				subscribedBroadcast.put(type, subscribedBroadcast.get(type));
+			} else {
+				ConcurrentLinkedQueue<MicroService> list = new ConcurrentLinkedQueue<>();
+				list.add(m);
+				subscribedBroadcast.put(type, list);
+			}
+			System.out.println(m.getName() + " sub " + type);
+			if (isStooped.get()) {
+				m.terminate();
+				m.subscribeBroadcast(CrashedBroadcast.class, new CrashedCallback(m));
+				sendBroadcast(new CrashedBroadcast());
+			}
+			tryAwaitingBroadcasts();
 		}
-		else
-		{
-			List<MicroService> list = new LinkedList<>();
-			list.add(m);
-			subscribedBroadcast.put(type,list);
-		}
-		if (isStooped)
-		{
-			m.terminate();
-		}
-		tryAwaitingBroadcasts();
 
 	}
 
@@ -91,10 +94,12 @@ public class MessageBusImpl implements MessageBus {
 	public void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
 		try {
-			List<MicroService> list = subscribedBroadcast.get(b.getClass());
+			ConcurrentLinkedQueue<MicroService> list = subscribedBroadcast.get(b.getClass());
+
 			if (b.getClass()==CrashedBroadcast.class)
 			{
-				this.isStooped =true;
+				System.out.println(list+" got to crash");
+				this.isStooped.compareAndSet(false,true);
 			}
 			if (list!=null && !list.isEmpty()){
 			for(MicroService m:list)
@@ -116,11 +121,9 @@ public class MessageBusImpl implements MessageBus {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		// TODO Auto-generated method stub
 		try {
-			List<MicroService> list = subscribedEvent.get(e.getClass());
+			ConcurrentLinkedQueue<MicroService> list = subscribedEvent.get(e.getClass());
 			if (list!=null && !list.isEmpty()) {
-				MicroService first = list.get(0);
-				list.remove(first);
-
+				MicroService first = list.remove();
 				list.add(first);
 				first.receiveMessage(e);
 			}

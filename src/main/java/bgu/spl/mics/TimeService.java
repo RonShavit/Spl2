@@ -16,6 +16,7 @@ public class TimeService extends MicroService {
 
     public void initialize()
     {
+        subscribeBroadcast(CrashedBroadcast.class, new CrashedCallback(this));
         while (clockCounter*speed<duration)
         {
             try

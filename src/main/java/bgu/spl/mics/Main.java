@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args)
     {
         //String path = args[0];
-        String path = "C:/Users/ronsh/IdeaProjects/spl2/example_input_2/configuration_file.json"; // ya change that
+        String path = "C:/Users/ronsh/IdeaProjects/spl2/example_input_with_error/configuration_file.json"; // ya change that
 
         String directory = getDirectory(path);
         try (FileReader f = new FileReader(path)) {
@@ -61,14 +61,14 @@ public class Main {
             for (Camera camera:cameraList)
             {
                 CameraService cameraService = new CameraService("camera"+camera.getId(),camera);
-                Thread camServiceThread = new Thread(cameraService);
+                Thread camServiceThread = new Thread(cameraService,"camera"+camera.getId());
                 camServiceThread.start();
             }
 
             for (LidarTrackerWorker lidar: lidarList)
             {
                 LiDarWorkerService liDarWorkerService = new LiDarWorkerService("lidar" +lidar.getId(),lidar);
-                Thread lidarServiceThread = new Thread(liDarWorkerService);
+                Thread lidarServiceThread = new Thread(liDarWorkerService,"lidar" +lidar.getId());
                 lidarServiceThread.start();
             }
 
@@ -77,12 +77,12 @@ public class Main {
             poseServiceThread.start();
 
             FusionSlamService fusionSlamService = new FusionSlamService("FusionSlamService");
-            Thread fusionSlamThread = new Thread(fusionSlamService);
+            Thread fusionSlamThread = new Thread(fusionSlamService, "fu");
             fusionSlamThread.start();
 
 
 
-
+            Thread.sleep(3000);
             //run threads
             tickService.start();
 

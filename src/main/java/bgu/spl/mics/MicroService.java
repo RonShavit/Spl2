@@ -184,11 +184,10 @@ public abstract class MicroService implements Runnable {
         while (!terminated) {
             if (!messagesQueue.isEmpty())
             {
-
                 Message msg = messagesQueue.remove();
                 if(msg.getClass()==CrashedBroadcast.class)
                 {
-                    System.out.println(callbackMap.get(msg.getClass()));;
+                    System.out.println(this.getName()+" got to crash");;
                 }
 
 

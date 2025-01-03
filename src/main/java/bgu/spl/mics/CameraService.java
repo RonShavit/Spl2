@@ -28,7 +28,7 @@ public class CameraService extends MicroService{
     public void updateTick()
     {
         super.updateTick();
-        StampedDetectedObject stampedDetectedObjects =  cam.getCameraData(this.getTick().intValue());
+        StampedDetectedObject stampedDetectedObjects =  cam.getCameraData(this.getTick().intValue(), this);
         DetectObjectEvent detectObjectEvent = new DetectObjectEvent(stampedDetectedObjects);
         sendEvent(detectObjectEvent);
     }

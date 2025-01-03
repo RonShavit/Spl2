@@ -50,7 +50,7 @@ public class Camera {
      * @param tick the tick that we want the objects detected at
      * @return all objects found at {@code tick} tick
      */
-    public StampedDetectedObject getCameraData(int tick)
+    public StampedDetectedObject getCameraData(int tick, CameraService cameraService)
     {
         StampedDetectedObject stampedDetectedObject = null;
         try {
@@ -67,6 +67,13 @@ public class Camera {
                     for (JsonElement detectedObject : objectsInTimeArray) {
                         String id = ((JsonObject)detectedObject).get("id").getAsString();
                         String description = ((JsonObject)detectedObject).get("description").getAsString();
+                        if (id.compareTo("ERROR")==0)
+                        {
+                            System.out.println("uhoh");
+                            cameraService.sendBroadcast(new CrashedBroadcast());
+                            cameraService.terminate();
+                        }
+                        else
                         detectedObjects.add(new DetectedObject(id,description));
                     }
                     stampedDetectedObject = new StampedDetectedObject(time,detectedObjects);
