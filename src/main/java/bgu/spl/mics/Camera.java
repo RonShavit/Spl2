@@ -17,16 +17,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Camera {
     final private int id;
     final private int frequency;
-    private Status status;
+    private STATUS status;
     ConcurrentLinkedQueue<StampedDetectedObject> stampedDetectedObjectsQueue;
     private final String path;
 
-    enum Status
-    {
-        Up,
-        Down,
-        Error;
-    }
+
 
     /**
      *
@@ -43,6 +38,11 @@ public class Camera {
         this.frequency = frequency;
         this.path = path;
         stampedDetectedObjectsQueue = new ConcurrentLinkedQueue<>();
+        status = STATUS.UP;
+    }
+
+    public void setStatus(STATUS status) {
+        this.status = status;
     }
 
     /**
@@ -61,7 +61,7 @@ public class Camera {
             for (JsonElement jsonElement:objectsArray)
             {
                 int time = ((JsonObject)jsonElement).get("time").getAsInt();
-                if (time == tick) {
+                if (time+frequency == tick) {
                     JsonArray objectsInTimeArray = ((JsonObject) jsonElement).getAsJsonArray("detectedObjects");
                     ConcurrentLinkedQueue<DetectedObject> detectedObjects = new ConcurrentLinkedQueue<>();
                     for (JsonElement detectedObject : objectsInTimeArray) {
@@ -72,6 +72,7 @@ public class Camera {
 
                             cameraService.sendBroadcast(new CrashedBroadcast());
                             cameraService.terminate();
+                            status = STATUS.ERROR;
                         }
                         else {
                             detectedObjects.add(new DetectedObject(id, description));

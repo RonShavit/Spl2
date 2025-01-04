@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class TimeService extends MicroService {
     int clockCounter;
 
@@ -16,8 +18,9 @@ public class TimeService extends MicroService {
 
     public void initialize()
     {
+        AtomicBoolean allDone = new AtomicBoolean(false);
         subscribeBroadcast(CrashedBroadcast.class, new CrashedCallback(this));
-        while (clockCounter*speed<duration)
+        while (clockCounter*speed<duration &&!allDone.get())
         {
             try
             {
@@ -25,6 +28,10 @@ public class TimeService extends MicroService {
                 clockCounter++;
                 TickBroadcast tickBroadcast = new TickBroadcast();
                 sendBroadcast(tickBroadcast);
+                if (TerminatedCounter.getInstance().getToTerminate()<=0)
+                {
+                    allDone.compareAndSet(false,true);
+                }
             }
             catch (Exception E)
             {}

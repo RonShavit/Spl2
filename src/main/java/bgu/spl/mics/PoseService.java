@@ -23,4 +23,9 @@ public class PoseService extends MicroService{
         PoseEvent poseEvent = new PoseEvent(pose);
         sendEvent(poseEvent);
     }
+
+    public void terminateGPSIMU()
+    {
+        this.gpsimu.setStatus(STATUS.DOWN);
+    }
 }

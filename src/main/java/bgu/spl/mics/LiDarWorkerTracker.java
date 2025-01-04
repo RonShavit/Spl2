@@ -16,7 +16,7 @@ public class LiDarWorkerTracker {
     final private int id;
     final private int frequency;
     final private String path;
-    Status status;
+    STATUS status;
     ConcurrentLinkedQueue<TrackedObject> lastTrackedObjects;
 
     public LiDarWorkerTracker(int id, int frequency, String path)
@@ -28,12 +28,8 @@ public class LiDarWorkerTracker {
 
     }
 
-
-    enum Status
-    {
-        Up,
-        Down,
-        Error;
+    public void setStatus(STATUS status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -63,6 +59,7 @@ public class LiDarWorkerTracker {
                     {
                         liDarService.sendBroadcast(new CrashedBroadcast());
                         liDarService.terminate();
+                        this.status = STATUS.ERROR;
                     }
                     else {
                         ConcurrentLinkedQueue<ConcurrentLinkedQueue<Double>> cloudPoints = new ConcurrentLinkedQueue<>();
@@ -71,7 +68,7 @@ public class LiDarWorkerTracker {
 
                             String lidarId = ((JsonObject) cloudPoint).get("id").getAsString();
                             int lidarTime = ((JsonObject) cloudPoint).get("time").getAsInt();
-                            if (id.compareTo(lidarId) == 0 && lidarTime == time) {
+                            if (id.compareTo(lidarId) == 0 && lidarTime+frequency == time) {
                                 JsonArray lidarCoordinates = ((JsonObject) cloudPoint).get("cloudPoints").getAsJsonArray();
                                 for (JsonElement coordinate : lidarCoordinates) {
                                     double x = ((JsonArray) coordinate).get(0).getAsInt();

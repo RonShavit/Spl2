@@ -163,7 +163,15 @@ public abstract class MicroService implements Runnable {
      */
     protected final void terminate() {
         this.terminated = true;
-        System.out.println(name+ " terminated");
+        TerminatedCounter.getInstance().decreaseRunning();
+        if (this.getClass()== CameraService.class)
+        {
+            ((CameraService)this).terminateCam();
+        } else if (this.getClass()== LiDarService.class) {
+            ((LiDarService)this).terminateLiDar();
+        } else if (this.getClass()== PoseService.class) {
+            ((PoseService)this).terminateGPSIMU();
+        }
     }
 
     /**

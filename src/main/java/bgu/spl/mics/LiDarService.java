@@ -37,4 +37,9 @@ public class LiDarService extends MicroService{
         sendEvent(trackedObjectEvent);
         ((Event<Boolean>) msg).resolveFuture(true);
     }
+
+    public void terminateLiDar()
+    {
+        this.lidarTrackerWorker.setStatus(STATUS.DOWN);
+    }
 }

@@ -15,13 +15,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class GPSIMU {
     AtomicInteger currentTick;
-    Status status;
+    STATUS status;
     ConcurrentLinkedQueue<Pose> posesList;
 
     public GPSIMU(String path)
     {
         currentTick = new AtomicInteger(0);
         posesList = getPosesListFromJson(path);
+        status = STATUS.UP;
     }
 
     public void increaseTick()
@@ -45,12 +46,7 @@ public class GPSIMU {
         return null;
     }
 
-    enum Status
-    {
-        Up,
-        Down,
-        Error;
-    }
+
 
     /**
      *
@@ -73,5 +69,9 @@ public class GPSIMU {
 
         }
         return poses;
+    }
+
+    public void setStatus(STATUS status) {
+        this.status = status;
     }
 }

@@ -32,4 +32,9 @@ public class CameraService extends MicroService{
         DetectObjectEvent detectObjectEvent = new DetectObjectEvent(stampedDetectedObjects);
         sendEvent(detectObjectEvent);
     }
+
+    public void terminateCam()
+    {
+        cam.setStatus(STATUS.DOWN);
+    }
 }
