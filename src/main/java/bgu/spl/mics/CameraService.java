@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class CameraService extends MicroService{
     Camera cam;
-    public CameraService(String name, Camera cam)
+    public CameraService(Camera cam)
     {
-        super(name);
+        super("camera"+cam.getId());
         this.cam = cam;
     }
 

@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import javax.swing.plaf.IconUIResource;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,47 +43,50 @@ public class Main {
             JsonObject lidarData = jsonObject.getAsJsonObject("LiDarWorkers");
             String lidarDataPath = lidarData.get("lidars_data_path").getAsString();
             lidarDataPath = directory+lidarDataPath.substring(1);
-            List<LidarTrackerWorker> lidarList = new ArrayList<>();
+            List<LiDarWorkerTracker> lidarList = new ArrayList<>();
             JsonArray lidarsConfig = lidarData.getAsJsonArray("LidarConfigurations");
             for (JsonElement jsonElement: lidarsConfig)
             {
-                lidarList.add(new LidarTrackerWorker(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),lidarDataPath));
+                lidarList.add(new LiDarWorkerTracker(((JsonObject)jsonElement).get("id").getAsInt(),((JsonObject)jsonElement).get("frequency").getAsInt(),lidarDataPath));
             }
             List<JsonObject> lidarsAsJson = new ArrayList<>();
 
 
             //create MicroServices Threads
-            TimeService timeService = new TimeService("TimeService",speed,duration);
+            TimeService timeService = new TimeService(speed,duration);
             Thread tickService = new Thread(timeService
             );
 
             for (Camera camera:cameraList)
             {
-                CameraService cameraService = new CameraService("camera"+camera.getId(),camera);
+                CameraService cameraService = new CameraService(camera);
                 Thread camServiceThread = new Thread(cameraService,"camera"+camera.getId());
                 camServiceThread.start();
             }
 
-            for (LidarTrackerWorker lidar: lidarList)
+            for (LiDarWorkerTracker lidar: lidarList)
             {
-                LiDarWorkerService liDarWorkerService = new LiDarWorkerService("lidar" +lidar.getId(),lidar);
+                LiDarService liDarWorkerService = new LiDarService(lidar);
                 Thread lidarServiceThread = new Thread(liDarWorkerService,"lidar" +lidar.getId());
                 lidarServiceThread.start();
             }
 
-            PoseService poseService = new PoseService("PoseService", posePath);
+            PoseService poseService = new PoseService(new GPSIMU(posePath));
             Thread poseServiceThread = new Thread(poseService);
             poseServiceThread.start();
 
-            FusionSlamService fusionSlamService = new FusionSlamService("FusionSlamService");
+            FusionSlamService fusionSlamService = new FusionSlamService(FusionSlam.getInstance());
             Thread fusionSlamThread = new Thread(fusionSlamService, "fu");
             fusionSlamThread.start();
 
 
 
-            Thread.sleep(3000);
+            //Thread.sleep(3000);
             //run threads
             tickService.start();
+
+            tickService.join();
+            System.out.println(StatisticalFolder.getInstance().toString());
 
         } catch (Exception e) {
             throw new RuntimeException(e);

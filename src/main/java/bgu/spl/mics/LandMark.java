@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * represents a landmark on the map
  */
-public class Landmark {
+public class LandMark {
     final private String id;
     private String description;
     private ConcurrentLinkedQueue<CloudPoint> coordinates;
@@ -14,7 +14,7 @@ public class Landmark {
         return id;
     }
 
-    public Landmark(String id, String description)
+    public LandMark(String id, String description)
     {
         this.id = id;
         this.description = description;

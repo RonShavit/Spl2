@@ -69,12 +69,14 @@ public class Camera {
                         String description = ((JsonObject)detectedObject).get("description").getAsString();
                         if (id.compareTo("ERROR")==0)
                         {
-                            System.out.println("uhoh");
+
                             cameraService.sendBroadcast(new CrashedBroadcast());
                             cameraService.terminate();
                         }
-                        else
-                        detectedObjects.add(new DetectedObject(id,description));
+                        else {
+                            detectedObjects.add(new DetectedObject(id, description));
+                            StatisticalFolder.getInstance().increaseDetectedObjects();
+                        }
                     }
                     stampedDetectedObject = new StampedDetectedObject(time,detectedObjects);
                 }

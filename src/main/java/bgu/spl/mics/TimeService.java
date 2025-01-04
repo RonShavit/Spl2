@@ -6,9 +6,9 @@ public class TimeService extends MicroService {
     final int speed;
     final int duration;
 
-    public TimeService(String name,int speed, int duration)
+    public TimeService(int speed, int duration)
     {
-        super(name);
+        super("TimeService");
         this.clockCounter = 0;
         this.speed = speed;
         this.duration = duration;
@@ -31,6 +31,7 @@ public class TimeService extends MicroService {
         }
         CrashedBroadcast crashedBroadcast = new CrashedBroadcast();
         sendBroadcast(crashedBroadcast);
+        StatisticalFolder.getInstance().setSystemRuntime(clockCounter);
         System.out.println("stopped at "+ clockCounter);
         terminate();
     }

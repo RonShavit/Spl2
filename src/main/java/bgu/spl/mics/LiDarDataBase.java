@@ -5,11 +5,11 @@ import  java.util.concurrent.ConcurrentLinkedQueue;
  * A singleton representing a database of StampedCloudPoints
  */
 
-public class LidarDataBase {
+public class LiDarDataBase {
     ConcurrentLinkedQueue<StampedCloudPoints> stampedCloudPointsQueue;
-    static private LidarDataBase dataBaseSingleton = null;
+    static private LiDarDataBase dataBaseSingleton = null;
     static private Object lock = new Integer(0);
-    private LidarDataBase()
+    private LiDarDataBase()
     {
         stampedCloudPointsQueue = new ConcurrentLinkedQueue<>();
     }
@@ -17,13 +17,13 @@ public class LidarDataBase {
     /**
      returns the instance of the singelton (create it if it doesn't exist)
      */
-    public static LidarDataBase getInstance()
+    public static LiDarDataBase getInstance()
     {
         if (dataBaseSingleton==null)
         {
             synchronized (lock) {
                 if (dataBaseSingleton == null)
-                    dataBaseSingleton = new LidarDataBase();
+                    dataBaseSingleton = new LiDarDataBase();
             }
         }
         return  dataBaseSingleton;

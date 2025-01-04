@@ -1,5 +1,4 @@
 package bgu.spl.mics;
-import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -8,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FusionSlam {
     private static FusionSlam fusionSlamInstance = null;
     private static Object lock = new Integer(0);
-    ConcurrentLinkedQueue<Landmark> landmarks;
+    ConcurrentLinkedQueue<LandMark> landmarks;
     ConcurrentLinkedQueue<Pose> poses;
     private FusionSlam()
     {
@@ -69,7 +68,7 @@ public class FusionSlam {
             }
             CloudPoint newPoint = new CloudPoint(sumX/counter,sumY/counter);
             boolean isLandMarkExist = false;
-            for (Landmark landmark: landmarks)
+            for (LandMark landmark: landmarks)
             {
                 if (landmark.getId().compareTo(trackedObject.getId())==0)
                 {
@@ -80,7 +79,8 @@ public class FusionSlam {
             }
             if (!isLandMarkExist)
             {
-                landmarks.add(new Landmark(trackedObject.getId(),trackedObject.getDescription()));
+                landmarks.add(new LandMark(trackedObject.getId(),trackedObject.getDescription()));
+                StatisticalFolder.getInstance().increaseLandMarks();
             }
 
         }

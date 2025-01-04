@@ -5,15 +5,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FusionSlamService extends MicroService{
     private FusionSlam fusionSlam;
 
-    public FusionSlamService(String name)
+    public FusionSlamService(FusionSlam fusionSlam)
     {
-        super(name);
-        fusionSlam = FusionSlam.getInstance();
+        super("FutionSlamService");
+        this.fusionSlam = fusionSlam;
     }
 
     public void initialize()
     {
-        subscribeBroadcast(TickBroadcast.class,new TickCallback(this));
+
         subscribeBroadcast(TerminatedBroadcast.class,new TerminatedCallback());
         subscribeBroadcast(CrashedBroadcast.class,new CrashedCallback(this));
 

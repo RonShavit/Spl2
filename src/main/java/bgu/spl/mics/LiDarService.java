@@ -2,15 +2,15 @@ package bgu.spl.mics;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class LiDarWorkerService extends MicroService{
-    LidarTrackerWorker lidarTrackerWorker;
-    public LiDarWorkerService(String name)
+public class LiDarService extends MicroService{
+    LiDarWorkerTracker lidarTrackerWorker;
+    public LiDarService(String name)
     {
         super(name);
     }
 
-    public LiDarWorkerService(String name, LidarTrackerWorker lidarTrackerWorker) {
-        super(name);
+    public LiDarService(LiDarWorkerTracker lidarTrackerWorker) {
+        super("LiDar"+ lidarTrackerWorker.getId());
         this.lidarTrackerWorker = lidarTrackerWorker;
     }
 
@@ -32,7 +32,7 @@ public class LiDarWorkerService extends MicroService{
     @Override
     public void DetectedObjectMessage(Message msg) {
         StampedDetectedObject stampedDetectedObject = ((DetectObjectEvent)msg).getStampedDetectedObjects(); // Has to be safe casting
-        ConcurrentLinkedQueue<TrackedObject> trackedObjects = lidarTrackerWorker.analiseStampedDetectedObjects(stampedDetectedObject);
+        ConcurrentLinkedQueue<TrackedObject> trackedObjects = lidarTrackerWorker.analiseStampedDetectedObjects(stampedDetectedObject, this);
         TrackedObjectEvent trackedObjectEvent = new TrackedObjectEvent(trackedObjects);
         sendEvent(trackedObjectEvent);
         ((Event<Boolean>) msg).resolveFuture(true);
