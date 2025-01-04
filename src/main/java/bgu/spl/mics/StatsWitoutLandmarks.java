@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.StatisticalFolder;
+
 public class StatsWitoutLandmarks {
     private int systemRuntime;
     private int numDetectedObjects;

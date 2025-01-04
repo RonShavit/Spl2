@@ -1,5 +1,10 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.Camera;
+import bgu.spl.mics.application.objects.LiDarWorkerTracker;
+import bgu.spl.mics.application.objects.Pose;
+import bgu.spl.mics.application.objects.StatisticalFolder;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ErrorJson {

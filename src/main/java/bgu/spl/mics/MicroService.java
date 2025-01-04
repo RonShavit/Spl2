@@ -1,5 +1,12 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.DetectObjectEvent;
+import bgu.spl.mics.application.messages.PoseEvent;
+import bgu.spl.mics.application.messages.TrackedObjectEvent;
+import bgu.spl.mics.application.services.CameraService;
+import bgu.spl.mics.application.services.LiDarService;
+import bgu.spl.mics.application.services.PoseService;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -200,7 +207,7 @@ public abstract class MicroService implements Runnable {
                     TrackedObjectMessage(msg);
                 else if (msg.getClass()== DetectObjectEvent.class)
                     DetectedObjectMessage(msg);
-                else if (msg.getClass()==PoseEvent.class)
+                else if (msg.getClass()== PoseEvent.class)
                     PoseMessage(msg);
                 else
                 {
@@ -254,6 +261,16 @@ public abstract class MicroService implements Runnable {
     public void receiveMessage(Message msg)
     {
         messagesQueue.add(msg);
+    }
+
+    public final void terminatMe()
+    {
+        terminate();
+    }
+
+    public final void sendBroadCast(Broadcast b)
+    {
+        sendBroadcast(b);
     }
 
 }

@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.LandMark;
+import bgu.spl.mics.application.objects.StatisticalFolder;
+
 public class Stats{
     private int systemRuntime;
     private int numDetectedObjects;

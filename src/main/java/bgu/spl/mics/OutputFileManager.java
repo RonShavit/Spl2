@@ -1,8 +1,9 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,7 +20,6 @@ public class OutputFileManager {
     private OutputFileManager()
     {
         isError = new AtomicBoolean(false);
-        this.path = "C:\\Users\\ronsh\\IdeaProjects\\spl2\\src\\main\\java\\bgu\\spl\\mics\\output_file.json";
     }
 
     public static OutputFileManager getInstance()
@@ -38,8 +38,8 @@ public class OutputFileManager {
 
     public void writeError(String errMsg, Camera faultyCam) throws IOException {
         isError.compareAndSet(false,true);
-        ErrorJson errorJson = new ErrorJson(errMsg, "camera"+faultyCam.getId(),FusionSlam.getInstance().getPoses(), cams,liDarWorkerTrackers);
-        Gson gson = new Gson();
+        ErrorJson errorJson = new ErrorJson(errMsg, "camera"+faultyCam.getId(), FusionSlam.getInstance().getPoses(), cams,liDarWorkerTrackers);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileWriter fileWriter = new FileWriter(path);
         gson.toJson(errorJson,fileWriter);
         fileWriter.close();
@@ -49,7 +49,7 @@ public class OutputFileManager {
     {
         isError.compareAndSet(false,true);
         ErrorJson errorJson = new ErrorJson(errMsg, "LiDarWorkerTracker"+liDarWorkerTracker.getId(),FusionSlam.getInstance().getPoses(), cams,liDarWorkerTrackers);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileWriter fileWriter = new FileWriter(path);
         gson.toJson(errorJson,fileWriter);
         fileWriter.close();
@@ -61,7 +61,7 @@ public class OutputFileManager {
         {
             ConcurrentLinkedQueue<LandMark> landMarkConcurrentLinkedQueue = FusionSlam.getInstance().getLandmarks();
             Stats stats = new Stats(StatisticalFolder.getInstance(),landMarkConcurrentLinkedQueue.toArray(new LandMark[landMarkConcurrentLinkedQueue.size()]));
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileWriter fileWriter = new FileWriter(path);
             gson.toJson(stats,fileWriter);
 
@@ -72,6 +72,7 @@ public class OutputFileManager {
         }
     }
 
-
-
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

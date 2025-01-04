@@ -1,6 +1,7 @@
 package bgu.spl.mics;
-import java.util.LinkedList;
-import java.util.List;
+import bgu.spl.mics.application.callbacks.CrashedCallback;
+import bgu.spl.mics.application.messages.CrashedBroadcast;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
