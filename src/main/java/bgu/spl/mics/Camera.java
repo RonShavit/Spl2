@@ -70,9 +70,18 @@ public class Camera {
                         if (id.compareTo("ERROR")==0)
                         {
 
+                            try
+                            {
+                                OutputFileManager.getInstance().writeError(description,this);
+                            }
+                            catch (IOException e)
+                            {
+
+                            }
                             cameraService.sendBroadcast(new CrashedBroadcast());
                             cameraService.terminate();
                             status = STATUS.ERROR;
+
                         }
                         else {
                             detectedObjects.add(new DetectedObject(id, description));

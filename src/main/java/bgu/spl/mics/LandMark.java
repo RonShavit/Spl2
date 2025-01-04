@@ -45,4 +45,8 @@ public class LandMark {
         coordinates.add(new CloudPoint(sumX/counter,sumY/counter));
 
     }
+
+    public ConcurrentLinkedQueue<CloudPoint> getCoordinates() {
+        return coordinates;
+    }
 }

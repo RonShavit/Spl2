@@ -43,6 +43,7 @@ public class FusionSlam {
     {
         for(TrackedObject trackedObject:trackedObjects)
         {
+            System.out.println(trackedObject.getCoordinates());
             ConcurrentLinkedQueue<CloudPoint> coordinates = trackedObject.getCoordinates();
             ConcurrentLinkedQueue<CloudPoint> landmarkCoordinates = new ConcurrentLinkedQueue<>();
             Pose currentPose = null;
@@ -66,8 +67,16 @@ public class FusionSlam {
                 sumY+=coordinate.getY();
                 counter++;
             }
-            CloudPoint newPoint = new CloudPoint(sumX/counter,sumY/counter);
+            CloudPoint newPoint;
+            if (counter!=0) {
+                newPoint = new CloudPoint(sumX / counter, sumY / counter);
+            }
+            else
+            {
+                newPoint = new CloudPoint(0, 0);
+            }
             boolean isLandMarkExist = false;
+
             for (LandMark landmark: landmarks)
             {
                 if (landmark.getId().compareTo(trackedObject.getId())==0)
@@ -79,7 +88,9 @@ public class FusionSlam {
             }
             if (!isLandMarkExist)
             {
-                landmarks.add(new LandMark(trackedObject.getId(),trackedObject.getDescription()));
+                LandMark newLandMark = new LandMark(trackedObject.getId(),trackedObject.getDescription());
+                newLandMark.addCloudPoint(newPoint);
+                landmarks.add(newLandMark);
                 StatisticalFolder.getInstance().increaseLandMarks();
             }
 
@@ -103,5 +114,13 @@ public class FusionSlam {
     {
         if (pose!=null)
             poses.add(pose);
+    }
+
+    public ConcurrentLinkedQueue<Pose> getPoses() {
+        return poses;
+    }
+
+    public ConcurrentLinkedQueue<LandMark> getLandmarks() {
+        return landmarks;
     }
 }

@@ -38,6 +38,11 @@ public class StatisticalFolder {
         systemRuntime.compareAndSet(systemRuntime.intValue(),runtime);
     }
 
+    public void increaseSystemRunTime()
+    {
+        systemRuntime.compareAndSet(systemRuntime.intValue(),systemRuntime.intValue()+1);
+    }
+
     public void increaseDetectedObjects()
     {
         numDetectedObjects.compareAndSet(numDetectedObjects.intValue(),numDetectedObjects.intValue()+1);
@@ -53,7 +58,21 @@ public class StatisticalFolder {
         numLandMarks.compareAndSet(numLandMarks.intValue(),numLandMarks.intValue()+1);
     }
 
+    public AtomicInteger getSystemRuntime() {
+        return systemRuntime;
+    }
 
+    public AtomicInteger getNumDetectedObjects() {
+        return numDetectedObjects;
+    }
+
+    public AtomicInteger getNumTrackedObjects() {
+        return numTrackedObjects;
+    }
+
+    public AtomicInteger getNumLandMarks() {
+        return numLandMarks;
+    }
 
     @Override
     public String toString() {

@@ -44,4 +44,9 @@ public class TrackedObject {
         return coordinates;
     }
 
+    public void addCoordinate(CloudPoint newCoordinate)
+    {
+        coordinates.add(newCoordinate);
+    }
+
 }

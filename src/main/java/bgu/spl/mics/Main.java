@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args)
     {
         //String path = args[0];
-        String path = "C:/Users/ronsh/IdeaProjects/spl2/example_input_2/configuration_file.json"; // ya change that
+        String path = "C:/Users/ronsh/IdeaProjects/spl2/example input/configuration_file.json"; // ya change that
 
         String directory = getDirectory(path);
         try (FileReader f = new FileReader(path)) {
@@ -91,6 +91,7 @@ public class Main {
 
             tickService.join();
             System.out.println(StatisticalFolder.getInstance().toString());
+
 
         } catch (Exception e) {
             throw new RuntimeException(e);

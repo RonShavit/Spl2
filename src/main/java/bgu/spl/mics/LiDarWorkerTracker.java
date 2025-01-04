@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -57,6 +58,10 @@ public class LiDarWorkerTracker {
                     String id = detectedObject.getId();
                     if (id.compareTo("ERROR")==0)
                     {
+                        try{
+                            OutputFileManager.getInstance().writeError("Sensor LidarWorkerTracker"+ this.id+" disconnected",this);
+                        }
+                        catch (IOException e){}
                         liDarService.sendBroadcast(new CrashedBroadcast());
                         liDarService.terminate();
                         this.status = STATUS.ERROR;
@@ -88,7 +93,9 @@ public class LiDarWorkerTracker {
                         }
                         StampedCloudPoints stampedCloudPoints = new StampedCloudPoints(time, id, cloudPoints);
                         LiDarDataBase.getInstance().addStampedCloudPoints(stampedCloudPoints);
-                        lastTrackedObjects.add(new TrackedObject(id, time, detectedObject.getDescription()));
+                        TrackedObject newTrackedObject = new TrackedObject(id, time, detectedObject.getDescription(),cloudPointsNoZ);
+
+                        lastTrackedObjects.add(newTrackedObject);
                         StatisticalFolder.getInstance().increaseTrackedObjects();
                     }
 

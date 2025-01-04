@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TimeService extends MicroService {
@@ -26,6 +27,7 @@ public class TimeService extends MicroService {
             {
                 Thread.sleep(speed);
                 clockCounter++;
+                StatisticalFolder.getInstance().increaseSystemRunTime();
                 TickBroadcast tickBroadcast = new TickBroadcast();
                 sendBroadcast(tickBroadcast);
                 if (TerminatedCounter.getInstance().getToTerminate()<=0)
@@ -36,6 +38,11 @@ public class TimeService extends MicroService {
             catch (Exception E)
             {}
         }
+        try
+        {
+            OutputFileManager.getInstance().writeStatistics();
+        }
+        catch (IOException e){}
         CrashedBroadcast crashedBroadcast = new CrashedBroadcast();
         sendBroadcast(crashedBroadcast);
         StatisticalFolder.getInstance().setSystemRuntime(clockCounter);

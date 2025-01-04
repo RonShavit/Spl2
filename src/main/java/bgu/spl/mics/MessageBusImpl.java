@@ -72,7 +72,6 @@ public class MessageBusImpl implements MessageBus {
 				list.add(m);
 				subscribedBroadcast.put(type, list);
 			}
-			System.out.println(m.getName() + " sub " + type);
 			if (isStooped.get()) {
 				m.terminate();
 				m.subscribeBroadcast(CrashedBroadcast.class, new CrashedCallback(m));
