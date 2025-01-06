@@ -52,7 +52,7 @@ public class TimeService extends MicroService {
         CrashedBroadcast crashedBroadcast = new CrashedBroadcast();
         sendBroadcast(crashedBroadcast);
         StatisticalFolder.getInstance().setSystemRuntime(clockCounter);
-        System.out.println("stopped at "+ clockCounter);
+
         terminate();
     }
 }

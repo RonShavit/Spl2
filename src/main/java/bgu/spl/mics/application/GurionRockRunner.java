@@ -13,16 +13,17 @@ import com.google.gson.JsonParser;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GurionRockRunner {
 
     public static void main(String[] args)
     {
         //String path = args[0];
-        String path = "C:/Users/ronsh/IdeaProjects/spl2/example_input_2/configuration_file.json"; // ya change that
+        String path = "C:/Users/ronsh/IdeaProjects/spl2/example input/configuration_file.json"; // ya change that
 
         String directory = getDirectory(path);
-        OutputFileManager.getInstance().setPath(directory+"/output_file_1.json"); //TODO : change
+        OutputFileManager.getInstance().setPath(directory+"/output_file_2.json"); //TODO : change
         try (FileReader f = new FileReader(path)) {
             // get data from json
             JsonObject jsonObject = JsonParser.parseReader(f).getAsJsonObject();
@@ -36,7 +37,7 @@ public class GurionRockRunner {
             String cameraDataPath = cameraData.get("camera_datas_path").getAsString();
             cameraDataPath = directory+cameraDataPath.substring(1);
 
-            List<Camera> cameraList = new ArrayList<>();
+            ConcurrentLinkedQueue<Camera> cameraList = new ConcurrentLinkedQueue<>();
             JsonArray camerasConfig = cameraData.getAsJsonArray("CamerasConfigurations");
             for (JsonElement jsonElement: camerasConfig)
             {
@@ -48,7 +49,7 @@ public class GurionRockRunner {
             JsonObject lidarData = jsonObject.getAsJsonObject("LiDarWorkers");
             String lidarDataPath = lidarData.get("lidars_data_path").getAsString();
             lidarDataPath = directory+lidarDataPath.substring(1);
-            List<LiDarWorkerTracker> lidarList = new ArrayList<>();
+            ConcurrentLinkedQueue<LiDarWorkerTracker> lidarList = new ConcurrentLinkedQueue<>();
             JsonArray lidarsConfig = lidarData.getAsJsonArray("LidarConfigurations");
             for (JsonElement jsonElement: lidarsConfig)
             {
@@ -57,6 +58,8 @@ public class GurionRockRunner {
             List<JsonObject> lidarsAsJson = new ArrayList<>();
 
 
+            OutputFileManager.getInstance().setCams(cameraList);
+            OutputFileManager.getInstance().setLiDarWorkerTrackers(lidarList);
             //create MicroServices Threads
             TimeService timeService = new TimeService(speed,duration);
             Thread tickService = new Thread(timeService
@@ -95,7 +98,7 @@ public class GurionRockRunner {
             tickService.start();
 
             tickService.join();
-            System.out.println(StatisticalFolder.getInstance().toString());
+
 
 
         } catch (Exception e) {

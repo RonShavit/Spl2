@@ -24,7 +24,7 @@ public class LandMark {
     public void addCloudPoint(CloudPoint point)
     {
         coordinates.add(point);
-        averagePosition();
+
     }
 
     /**

@@ -20,6 +20,7 @@ public class Camera {
     private STATUS status;
     ConcurrentLinkedQueue<StampedDetectedObject> stampedDetectedObjectsQueue;
     private final String path;
+    private ConcurrentLinkedQueue<DetectedObject> lastFrame;
 
 
 
@@ -37,6 +38,7 @@ public class Camera {
         this.id = id;
         this.frequency = frequency;
         this.path = path;
+        this.lastFrame = new ConcurrentLinkedQueue<>();
         stampedDetectedObjectsQueue = new ConcurrentLinkedQueue<>();
         status = STATUS.UP;
     }
@@ -58,6 +60,7 @@ public class Camera {
             String camName = "camera"+id;
             JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
             JsonArray objectsArray = jsonObject.getAsJsonArray(camName);
+
             for (JsonElement jsonElement:objectsArray)
             {
                 int time = ((JsonObject)jsonElement).get("time").getAsInt();
@@ -88,6 +91,8 @@ public class Camera {
                             StatisticalFolder.getInstance().increaseDetectedObjects();
                         }
                     }
+                    if (detectedObjects!=null)
+                        lastFrame = detectedObjects;
                     stampedDetectedObject = new StampedDetectedObject(time,detectedObjects);
                 }
             }
@@ -96,5 +101,13 @@ public class Camera {
             throw new RuntimeException(e);
         }
         return stampedDetectedObject;
+    }
+
+    public ConcurrentLinkedQueue<DetectedObject> getLastFrame() {
+        return lastFrame;
+    }
+
+    public int getFrequency() {
+        return frequency;
     }
 }

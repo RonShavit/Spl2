@@ -1,0 +1,123 @@
+{
+  "error": "Camera Disconnected",
+  "faultySensor": "camera1",
+  "lastCameraFrame": {
+    "camera1": [
+      {
+        "id": "Wall_3",
+        "description": "Wall"
+      }
+    ]
+  },
+  "lastLiDarWorkerTrackersFrame": {
+    "LiDarWorkerTracker1": [
+      {
+        "id": "Wall_3",
+        "time": 12,
+        "description": "Wall",
+        "coordinates": [
+          {
+            "x": 3.0,
+            "y": 0.0
+          },
+          {
+            "x": 3.0,
+            "y": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  "poses": [
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "yaw": 0.0,
+      "TIME": 1
+    },
+    {
+      "x": -3.2076,
+      "y": 0.0755,
+      "yaw": -87.48,
+      "TIME": 2
+    },
+    {
+      "x": -5.7074,
+      "y": 0.1484,
+      "yaw": -92.68,
+      "TIME": 3
+    },
+    {
+      "x": -4.953,
+      "y": 1.3106,
+      "yaw": 144.06,
+      "TIME": 4
+    },
+    {
+      "x": -4.817,
+      "y": 2.8094,
+      "yaw": 132.57,
+      "TIME": 5
+    },
+    {
+      "x": -3.16,
+      "y": 3.1058,
+      "yaw": -28.08,
+      "TIME": 6
+    },
+    {
+      "x": -2.366,
+      "y": 0.9327,
+      "yaw": -28.08,
+      "TIME": 7
+    },
+    {
+      "x": -1.118,
+      "y": 2.1373,
+      "yaw": 22.98,
+      "TIME": 8
+    },
+    {
+      "x": -0.436,
+      "y": 2.8818,
+      "yaw": 38.85,
+      "TIME": 9
+    },
+    {
+      "x": 0.0,
+      "y": 3.6,
+      "yaw": 57.3,
+      "TIME": 10
+    },
+    {
+      "x": 0.5,
+      "y": 4.4,
+      "yaw": 68.76,
+      "TIME": 11
+    },
+    {
+      "x": 1.2,
+      "y": 5.1,
+      "yaw": 85.95,
+      "TIME": 12
+    },
+    {
+      "x": 2.0,
+      "y": 5.8,
+      "yaw": 103.09,
+      "TIME": 13
+    },
+    {
+      "x": 3.0,
+      "y": 6.3,
+      "yaw": 120.35,
+      "TIME": 14
+    }
+  ],
+  "statistics": {
+    "systemRuntime": 15,
+    "numDetectedObjects": 9,
+    "numTrackedObjects": 10,
+    "numLandMarks": 7
+  }
+}

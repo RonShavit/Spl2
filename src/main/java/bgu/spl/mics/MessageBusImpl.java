@@ -98,7 +98,7 @@ public class MessageBusImpl implements MessageBus {
 
 			if (b.getClass()==CrashedBroadcast.class)
 			{
-				System.out.println(list+" got to crash");
+
 				this.isStooped.compareAndSet(false,true);
 			}
 			if (list!=null && !list.isEmpty()){
@@ -187,6 +187,11 @@ public class MessageBusImpl implements MessageBus {
 		waitingEvents = new ConcurrentLinkedQueue<>();
 	}
 
-	
+	public Map<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> getSubscribedEvent() {
+		return subscribedEvent;
+	}
 
+	public Map<Class<? extends Broadcast>, ConcurrentLinkedQueue<MicroService>> getSubscribedBroadcast() {
+		return subscribedBroadcast;
+	}
 }

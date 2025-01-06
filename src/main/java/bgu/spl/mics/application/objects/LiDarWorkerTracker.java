@@ -48,9 +48,9 @@ public class LiDarWorkerTracker {
     public ConcurrentLinkedQueue<TrackedObject> analiseStampedDetectedObjects(StampedDetectedObject stampedDetectedObject, LiDarService liDarService)
     {
 
-
+        ConcurrentLinkedQueue<TrackedObject> lastTrackedObjectsTemp = new ConcurrentLinkedQueue<>();
         if (stampedDetectedObject!=null) {
-            this.lastTrackedObjects = new ConcurrentLinkedQueue<>();
+
             try {
                 FileReader reader = new FileReader(path);
 
@@ -98,7 +98,7 @@ public class LiDarWorkerTracker {
                         LiDarDataBase.getInstance().addStampedCloudPoints(stampedCloudPoints);
                         TrackedObject newTrackedObject = new TrackedObject(id, time, detectedObject.getDescription(),cloudPointsNoZ);
 
-                        lastTrackedObjects.add(newTrackedObject);
+                        lastTrackedObjectsTemp.add(newTrackedObject);
                         StatisticalFolder.getInstance().increaseTrackedObjects();
                     }
 
@@ -109,7 +109,13 @@ public class LiDarWorkerTracker {
                 throw new RuntimeException(e);
             }
         }
-        return lastTrackedObjects;
+        if (lastTrackedObjectsTemp.size()>0)
+            lastTrackedObjects = lastTrackedObjectsTemp;
+        return lastTrackedObjectsTemp;
 
+    }
+
+    public ConcurrentLinkedQueue<TrackedObject> getLastTrackedObjects() {
+        return lastTrackedObjects;
     }
 }

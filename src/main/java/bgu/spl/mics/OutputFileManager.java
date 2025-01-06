@@ -75,4 +75,12 @@ public class OutputFileManager {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public void setCams(ConcurrentLinkedQueue<Camera> cams) {
+        this.cams = cams;
+    }
+
+    public void setLiDarWorkerTrackers(ConcurrentLinkedQueue<LiDarWorkerTracker> liDarWorkerTrackers) {
+        this.liDarWorkerTrackers = liDarWorkerTrackers;
+    }
 }

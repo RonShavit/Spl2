@@ -44,7 +44,7 @@ public class FusionSlam {
     {
         for(TrackedObject trackedObject:trackedObjects)
         {
-            System.out.println(trackedObject.getCoordinates());
+
             ConcurrentLinkedQueue<CloudPoint> coordinates = trackedObject.getCoordinates();
             ConcurrentLinkedQueue<CloudPoint> landmarkCoordinates = new ConcurrentLinkedQueue<>();
             Pose currentPose = null;
@@ -104,11 +104,11 @@ public class FusionSlam {
      * @param pose the current {@link Pose} of the robot
      * @return The {@link CloudPoint} {@code point} in accordance to the charging station
      */
-    private CloudPoint normalizeLocationOfPoint(CloudPoint point,Pose pose)
+    public CloudPoint normalizeLocationOfPoint(CloudPoint point,Pose pose)
     {
         double distance = Math.sqrt(Math.pow(point.getX(), 2)+Math.pow(point.getY(), 2));
         double angle = pose.getYaw();
-        return new CloudPoint(pose.getX()+(Math.cos(angle)*distance),pose.getY()+(Math.sin(angle)*distance));
+        return new CloudPoint(pose.getX()+(point.getX()*Math.cos(angle))+(point.getY()*Math.sin(angle)),pose.getY()-(point.getX()*Math.sin(angle))+(point.getY()*Math.cos(angle)));
     }
 
     public void addPose(Pose pose)

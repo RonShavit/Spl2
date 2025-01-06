@@ -12,15 +12,19 @@ import bgu.spl.mics.application.objects.Camera;
 import bgu.spl.mics.application.objects.STATUS;
 import bgu.spl.mics.application.objects.StampedDetectedObject;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Handles communication between a camera and the message bus (thus with the rest of the system)
  */
 public class CameraService extends MicroService {
     Camera cam;
+    ConcurrentHashMap<Integer,StampedDetectedObject> toSend;
     public CameraService(Camera cam)
     {
         super("camera"+cam.getId());
         this.cam = cam;
+        this.toSend = new ConcurrentHashMap<>();
     }
 
     public void initialize()
@@ -37,9 +41,16 @@ public class CameraService extends MicroService {
     public void updateTick()
     {
         super.updateTick();
-        StampedDetectedObject stampedDetectedObjects =  cam.getCameraData(this.getTick().intValue(), this);
-        DetectObjectEvent detectObjectEvent = new DetectObjectEvent(stampedDetectedObjects);
-        sendEvent(detectObjectEvent);
+        StampedDetectedObject data = cam.getCameraData(this.getTick().intValue(), this);
+        if (data!=null) {
+            toSend.put(this.getTick().intValue(),data );
+            int frequency = cam.getFrequency();
+            DetectObjectEvent detectObjectEvent = null;
+            if (toSend.containsKey(this.getTick().intValue() - frequency)) {
+                detectObjectEvent = new DetectObjectEvent(toSend.get(this.getTick().intValue() - frequency));
+                sendEvent(detectObjectEvent);
+            }
+        }
     }
 
 
